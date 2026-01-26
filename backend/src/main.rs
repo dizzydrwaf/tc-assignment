@@ -3,15 +3,14 @@ use axum::{
     routing::post,
     Router,
 };
-use std::sync::Arc;
-use tokio::sync::Mutex;
 use deadpool_sqlite::{Config, Pool, Runtime};
+use deadpool_sqlite::rusqlite::{self, params};
 use backend::routes;
 use backend::user;
 
 #[tokio::main]
-async fn main() -> Result<()> {
-    let mut cfg = Config::new("users.sqlite3");
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let cfg = Config::new("users.sqlite3");
     let pool = cfg.create_pool(Runtime::Tokio1).unwrap();
 
     {
@@ -41,24 +40,24 @@ async fn main() -> Result<()> {
     }
 
     // debug: print database
-    let mut statement = conn.prepare("SELECT id, name, surname, password_hash, email FROM user")?;
-    let users = statement.query_map([], |row| {
-        Ok(user::User {
-            id: row.get(0)?,
-            name: row.get(1)?,
-            surname: row.get(2)?,
-            password_hash: row.get(3)?,
-            email: row.get(4)?,
-        })
-    })?;
+    let _ = pool.get().await?.interact(|conn| {
+        let mut stmt = conn.prepare("SELECT id, name, surname, password_hash, email FROM user")?;
+        let users = stmt.query_map([], |row| {
+            Ok(user::User {
+                id: row.get(0)?,
+                name: row.get(1)?,
+                surname: row.get(2)?,
+                password_hash: row.get(3)?,
+                email: row.get(4)?,
+            })
+        })?;
+        for user in users {
+            println!("{:?}", user);
+        }
+        Ok::<_, rusqlite::Error>(())
+    }).await?;
 
-    for user in users {
-        println!("{:?}", user);
-    }
-
-    let db = Arc::new(Mutex::new(conn));
-
-    let app = Router::new()
+    let app = Router::<Pool>::new()
         .route("/health", get(routes::health::health))
         .route("/auth/register", post(routes::auth::register))
         .with_state(pool);

@@ -1,16 +1,18 @@
-use axum::{extract::{State, Json}, response::IntoResponse};
+use axum::extract::{State, Json};
 use deadpool_sqlite::Pool;
 use serde::Serialize;
-use crate::user;
+use crate::user::NewUser;
 
 #[derive(Serialize)]
-pub struct RegisterStatus {
-    status: &'static str,
+pub enum RegisterStatus {
+    Success,
+    UserAlreadyExists,
+    InvalidInput,
 }
 
 pub async fn register(
-    State(Pool): State<Pool>,
-    Json(payload): Json<user::User>
+    State(_pool): State<Pool>,
+    Json(_user): Json<NewUser>,
 ) -> Json<RegisterStatus> {
-    Json(RegisterStatus { status: "ok" })
+    Json(RegisterStatus::Success)
 }
