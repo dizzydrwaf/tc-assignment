@@ -29,12 +29,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
             conn.execute(
                 "INSERT INTO users (id, name, surname, password_hash, email)
-                 VALUES (1, ?1, ?2, ?3, ?4)
-                 ON CONFLICT(id) DO UPDATE SET
-                   name = excluded.name,
-                   surname = excluded.surname,
-                   password_hash = excluded.password_hash,
-                   email = excluded.email",
+                VALUES (1, ?1, ?2, ?3, ?4)
+                ON CONFLICT(id) DO UPDATE SET
+                    name = excluded.name,
+                    surname = excluded.surname,
+                    password_hash = excluded.password_hash,
+                    email = excluded.email",
                 params!["Admin", "Admin", "passwd_hash", "admin@example.com"],
             )?;
 
