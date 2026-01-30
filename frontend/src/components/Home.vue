@@ -1,6 +1,3 @@
-<script setup>
-</script>
-
 <template>
     <div class="classrooms-page">
     <!-- Header with search and subject filter only -->
@@ -74,5 +71,8 @@
     </div>
 </template>
 
-<style>
+<script setup>
+</script>
+
+<style scoped>
 </style>
