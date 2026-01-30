@@ -31,27 +31,28 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref } from "vue";
 
-const email = ref('')
-const password = ref('')
-const error = ref('')
+const email = ref("");
+const password = ref("");
+const error = ref("");
 
-function handleLogin() {
-  error.value = ''
+/* NYI */
+function _handleLogin() {
+	error.value = "";
 
-  // basic example validation
-  if (!email.value || !password.value) {
-    error.value = 'Please fill in all fields'
-    return
-  }
+	// basic example validation
+	if (!email.value || !password.value) {
+		error.value = "Please fill in all fields";
+		return;
+	}
 
-  // Replace this with real auth logic / API call
-  if (email.value === 'admin@example.com' && password.value === 'password') {
-    alert('Logged in!')
-  } else {
-    error.value = 'Invalid credentials'
-  }
+	// Replace this with real auth logic / API call
+	if (email.value === "admin@example.com" && password.value === "password") {
+		alert("Logged in!");
+	} else {
+		error.value = "Invalid credentials";
+	}
 }
 </script>
 
