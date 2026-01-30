@@ -4,7 +4,16 @@
 
     <form @submit.prevent="handleLogin">
       <div class="field">
-        <label>Email</label>
+        <label>Instans </label>
+        <input
+          type="instans"
+          v-model="instans"
+          required 
+          placeholder="Instans"
+      </div>
+
+      <div class="field">
+        <label>Email </label>
         <input
           type="email"
           v-model="email"
@@ -14,7 +23,7 @@
       </div>
 
       <div class="field">
-        <label>Password</label>
+        <label>Password </label>
         <input
           type="password"
           v-model="password"
@@ -56,4 +65,5 @@ function _handleLogin() {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

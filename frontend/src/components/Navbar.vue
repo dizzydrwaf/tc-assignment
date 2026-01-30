@@ -1,6 +1,3 @@
-<script setup>
-</script>
-
 <template>
 <nav>
     <ul class="nav-list">
@@ -29,5 +26,8 @@
 </nav>
 </template>
 
-<style>
+<script setup>
+</script>
+
+<style scoped>
 </style>
