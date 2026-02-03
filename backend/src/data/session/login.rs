@@ -12,6 +12,24 @@ pub enum LoginOutcome {
 }
 
 impl Database {
+    /// Attempts to log in a user with the given email and password.
+    ///
+    /// If the credentials are valid, a new session is created and its UUID is returned.
+    /// The function checks whether the user exists and whether the password matches the stored hash.
+    ///
+    /// # Returns
+    ///
+    /// - `Ok(LoginOutcome::Success(uuid))` if the email exists and the password is correct.
+    /// - `Ok(LoginOutcome::InvalidCredentials)` if the email exists but the password is incorrect.
+    /// - `Ok(LoginOutcome::UserDoesNotExist)` if no user exists with the given email.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if:
+    /// - a database connection cannot be acquired from the pool
+    /// - a database task fails to run or complete
+    /// - executing any SQL query fails
+    /// - password verification fails
      pub async fn login_user(&self, email: String, password: String) -> Result<LoginOutcome> {
         let conn = self.pool.get().await?;
 

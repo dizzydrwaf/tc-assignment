@@ -8,6 +8,18 @@ pub struct Database {
 }
 
 impl Database {
+    /// Creates a new instance and initializes the database.
+    ///
+    /// This sets up the required database schema if it does not already exist,
+    /// ensures a default admin user is present, and recreates the `sessions` table.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if:
+    /// - the database configuration or connection pool cannot be created
+    /// - a database connection cannot be acquired from the pool
+    /// - a database task fails to run or complete
+    /// - executing any of the schema initialization or setup SQL statements fails
     pub async fn new() -> Result<Self> {
         let cfg = Config::new("db.sqlite3");
         let pool = cfg.create_pool(Runtime::Tokio1)?;

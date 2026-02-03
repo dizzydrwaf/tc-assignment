@@ -4,6 +4,16 @@ use deadpool_sqlite::rusqlite::{OptionalExtension, params};
 use super::super::Database;
 
 impl Database {
+    /// Checks whether a session with the given UUID exists.
+    ///
+    /// Returns `true` if the session exists, `false` otherwise.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if:
+    /// - a database connection cannot be acquired from the pool
+    /// - a database task fails to run or complete
+    /// - executing the SQL query fails
     pub async fn verify_session(&self, session_uuid: String) -> Result<bool> {
         let conn = self.pool.get().await?;
 
