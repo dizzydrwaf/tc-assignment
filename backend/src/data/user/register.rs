@@ -11,6 +11,18 @@ pub enum RegisterOutcome {
 }
 
 impl Database {
+    /// Registers a new user in the `users` table.
+    ///
+    /// If a user with the same email already exists, no insertion is performed and
+    /// [`RegisterOutcome::UserAlreadyExists`] is returned.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if:
+    /// - a database connection cannot be acquired from the pool
+    /// - a database task fails to run or complete
+    /// - the required SQL queries fail to execute
+    /// - password hashing fails
     pub async fn register_user(&self, user: NewUser) -> Result<RegisterOutcome> {
         let conn = self.pool.get().await?;
 
