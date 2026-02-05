@@ -11,12 +11,7 @@ use backend::cors;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    
-    let mut dev = false;
-
-    for arg in env::args().skip(1) {
-        dev = matches!(arg.as_str(), "--dev");
-    }
+    let dev = env::args().skip(1).any(|arg| arg == "--dev");
 
     let cors_layer = if dev {
         println!("WARN: running in development mode");
@@ -34,8 +29,11 @@ async fn main() -> Result<()> {
         .route("/auth/register", post(routes::auth::register))
         .route("/health", get(routes::health::health))
         .route("/rooms/create", post(routes::rooms::create))
-        .route("/rooms/delete/{id}", delete(routes::rooms::delete))
         .route("/rooms/get", get(routes::rooms::get))
+        .route("/rooms/join/{code}", post(routes::rooms::join))
+        .route("/rooms/{id}/delete", delete(routes::rooms::delete))
+        .route("/rooms/{id}/invitation-code", get(routes::rooms::invitation_code))
+        .route("/rooms/{id}/leave", post(routes::rooms::leave))
         .with_state(database)
         .layer(CookieManagerLayer::new())
         .layer(cors_layer);
